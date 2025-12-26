@@ -111,7 +111,7 @@ button{
 }
 
 .logo{
-  height:1em;        /* 제목 글자 높이와 동일 */
+  height:2em;        /* 제목 글자 높이와 동일 */
   width:auto;
   display:block;
   object-fit:contain;
@@ -226,3 +226,4 @@ button{
 @media (max-width: 480px){
   button{ font-size:18px; padding:16px; }
 }
+
