@@ -180,19 +180,19 @@ button{
 }
 
 /* 공/수 숫자 컬럼 */
-.side-col{
+.sidecol{
   width:36px;
   text-align:center;
   line-height:1.05;              /* ✅ 행간 줄임 */
 }
 
-.side-col .label{
+.sidecol .label{
   font-size:12px;
   line-height:1.05;
 }
 
-.side-col .num{
-  font-size:16px;
+.sidecol .num{
+  font-size:12px;
   font-weight:700;
   line-height:1.05;
 }
@@ -232,4 +232,5 @@ button{
   align-items: center;
   word-break:break-word;
 }
+
 
