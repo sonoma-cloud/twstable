@@ -39,13 +39,21 @@ inputs.innerHTML += `
     <div class="card">
       <img src="${m.img}" crossorigin="anonymous" referrerpolicy="no-referrer">
       <div class="content">
-        <div class="bar-wrap">
-          공
-          <div class="bar">
-            <div class="bar-inner" id="bar${i}"></div>
-          </div>
-          수
-        </div>
+<div class="bar-wrap">
+  <div class="side-col">
+    <div class="label">공</div>
+    <div class="num" id="gNum${i}">50</div>
+  </div>
+
+  <div class="bar">
+    <div class="bar-inner" id="bar${i}"></div>
+  </div>
+
+  <div class="side-col">
+    <div class="label">수</div>
+    <div class="num" id="sNum${i}">50</div>
+  </div>
+</div>
         <div class="result-text" id="resultText${i}">텍스트 작성</div>
       </div>
     </div>
@@ -106,6 +114,15 @@ function generate() {
       gPct.textContent = `${g}%`;
       sPct.textContent = `${s}%`;
     }
+const gNum = document.getElementById(`gNum${i}`);
+const sNum = document.getElementById(`sNum${i}`);
+
+if (gNum && sNum) {
+  gNum.textContent = g; // 0 ~ 100
+  sNum.textContent = s; // 0 ~ 100
+}
+const g = Math.round(Number(r.value) / STEP) * STEP;
+const s = 100 - g;
 
     // ✅ 결과 바: 길이 고정 50% + 위치만 이동
     // g=100 -> left=0 (왼쪽 끝)
@@ -255,6 +272,7 @@ function updatePreviewScale(){
 }
 
 window.addEventListener("resize", updatePreviewScale);
+
 
 
 
