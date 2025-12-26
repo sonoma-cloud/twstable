@@ -180,14 +180,38 @@ button {
   white-space: nowrap;
 }
 
-/* 화면에서는 축소해서 보이기 (저장 크기는 유지) */
+/* ====== 캡처 원본(저장) 크기 고정 ====== */
+.canvas{
+  width: 1200px;
+  height: 900px;
+}
+
+/* ====== 화면에서만 축소해서 보여주기(비율 4:3 유지) ====== */
+#result{
+  overflow-x: auto;              /* PC/모바일에서 잘림 방지 */
+}
+
+#capture{
+  transform-origin: top left;
+}
+
+/* 모바일에서는 화면 너비에 맞춰서 축소 */
 @media (max-width: 480px){
-  .canvas{
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 3;
+  #result{
+    overflow-x: hidden;
+  }
+
+  /* 화면 폭 기준으로 1200px 캔버스를 비율 유지한 채 축소 */
+  #capture{
+    transform: scale(calc(100vw / 1200));
+  }
+
+  /* 축소된 만큼 아래 공간도 맞춰주기(스크롤/겹침 방지) */
+  #result{
+    padding-bottom: calc(900px * (100vw / 1200));
   }
 }
+
 
 
 
