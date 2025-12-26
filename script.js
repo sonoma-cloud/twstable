@@ -10,7 +10,7 @@ const members = [
 const STEP = 10;            // 10% 단위
 const FIXED_WIDTH = 50;     // 결과 바 길이 항상 50%
 const MAX_CHARS = 100;      // 입력 최대 글자수(한글 100자 기준)
-const TEXT_FONT_PX = 16;    // 결과 텍스트 폰트 고정(잘리게)
+const TEXT_FONT_PX = 20;    // 결과 텍스트 폰트 고정(잘리게)
 const CAPTURE_W = 1200;
 const CAPTURE_H = 900;
 
@@ -196,3 +196,4 @@ function saveImage() {
     capture.style.transformOrigin = prevOrigin;
   });
 }
+
