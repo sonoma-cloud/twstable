@@ -51,10 +51,18 @@ members.forEach((m, i) => {
 /* 슬라이더 실시간 */
 members.forEach((_, i) => {
   const r = document.getElementById(`range${i}`);
-  const v = document.getElementById(`value${i}`);
-  r.addEventListener("input", () => {
-    v.innerText = `${r.value} / ${100 - r.value}`;
-  });
+  const gPct = document.getElementById(`gPct${i}`);
+  const sPct = document.getElementById(`sPct${i}`);
+
+  const sync = () => {
+    const g = Number(r.value);
+    const s = 100 - g;
+    gPct.textContent = `${g}%`;
+    sPct.textContent = `${s}%`;
+  };
+
+  r.addEventListener("input", sync);
+  sync(); // 초기값도 즉시 반영
 });
 
 /* 결과 생성 */
@@ -107,6 +115,7 @@ function saveImage() {
     <!-- 결과 카드들 -->
   </div>
 </div>
+
 
 
 
