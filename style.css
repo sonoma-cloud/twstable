@@ -118,7 +118,7 @@ button{
 }
 
 .header h1{
-  font-size:32px;   /* 제목 가독성 ↑ */
+  font-size:38px;   /* 제목 가독성 ↑ */
   margin:0;
 }
 
@@ -206,6 +206,7 @@ button{
   justify-content: flex-start;
   word-break:break-word;
 }
+
 
 
 
