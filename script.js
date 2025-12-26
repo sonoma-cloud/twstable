@@ -81,7 +81,7 @@ members.forEach((_, i) => {
   sync();
 });
 
-// ====== 결과 텍스트: 폰트 16 고정 + 넘치면 잘리게 ======
+// ====== 결과 텍스트: 폰트 고정 + 넘치면 잘리게 ======
 function setTextClamped(el, text) {
   el.textContent = text || " ";
   el.style.fontSize = `${TEXT_FONT_PX}px`;
@@ -107,6 +107,12 @@ window.addEventListener("resize", () => {
 
 // ====== 결과 생성 ======
 function generate() {
+  // ✅ OTP 반영
+  const otpIn = document.getElementById("otpIn");
+  const otpOut = document.getElementById("otpOut");
+  const otpText = (otpIn?.value || "").trim().slice(0, 8);
+  if (otpOut) otpOut.textContent = otpText;
+
   members.forEach((_, i) => {
     const r = document.getElementById(`range${i}`);
     let g = Math.round(Number(r.value) / STEP) * STEP;
@@ -130,13 +136,12 @@ function generate() {
     if (sNum) sNum.textContent = String(s);
 
     // ✅ 결과 바: 길이 고정 50% + 위치만 이동
-    // g=100 -> left=0, g=50 -> left=25, g=0 -> left=50
     const bar = document.getElementById(`bar${i}`);
     const left = (100 - g) / 2;
     bar.style.width = `${FIXED_WIDTH}%`;
     bar.style.left = `${left}%`;
 
-    // 텍스트 반영 (16 고정 + 넘치면 잘림)
+    // 텍스트 반영 (고정 + 넘치면 잘림)
     const raw = (document.getElementById(`text${i}`).value || "").slice(0, MAX_CHARS);
     setTextClamped(document.getElementById(`resultText${i}`), raw);
   });
@@ -166,9 +171,9 @@ function saveImage() {
     width: CAPTURE_W,
     height: CAPTURE_H,
     windowWidth: CAPTURE_W,
+    height: CAPTURE_H,
     windowHeight: CAPTURE_H
   }).then((canvas) => {
-    // 혹시라도 캔버스가 작게 나오면 1200x900에 fit
     const out = document.createElement("canvas");
     out.width = CAPTURE_W;
     out.height = CAPTURE_H;
@@ -196,4 +201,3 @@ function saveImage() {
     capture.style.transformOrigin = prevOrigin;
   });
 }
-
