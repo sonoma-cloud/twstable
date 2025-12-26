@@ -15,7 +15,7 @@ members.forEach((m, i) => {
   inputs.innerHTML += `
     <div class="member-control">
       <div class="member-header">
-        <img src="${m.img}">
+        <img src="${m.img}" crossorigin="anonymous">
         <strong>${m.name}</strong>
       </div>
 
@@ -33,7 +33,7 @@ members.forEach((m, i) => {
 
   resultList.innerHTML += `
     <div class="card">
-      <img src="${m.img}">
+      <img src="${m.img}" crossorigin="anonymous">
       <div class="content">
         <div class="bar-wrap">
           공
@@ -103,13 +103,22 @@ function generate() {
 
 /* 이미지 저장 */
 function saveImage() {
-  html2canvas(document.getElementById("capture"), { scale: 2 }).then(canvas => {
+  html2canvas(document.getElementById("capture"), {
+    scale: 3,
+    useCORS: true,
+    allowTaint: true,
+    backgroundColor: "#fff"
+  }).then(canvas => {
     const a = document.createElement("a");
     a.href = canvas.toDataURL("image/png");
     a.download = "gong_su_4x3.png";
     a.click();
+  }).catch(err => {
+    alert("이미지 저장 실패: 멤버 이미지가 캡처에서 막혔을 수 있어요(CORS).");
+    console.error(err);
   });
 }
+
 
 
 
