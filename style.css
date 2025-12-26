@@ -101,9 +101,7 @@ button{
 }
 
 .title-wrap{
-  display:flex;
-  align-items:center;
-  gap:10px;
+  font-size: 24px; /* 기준 폰트 */
 }
 
 .header h1{
@@ -113,10 +111,8 @@ button{
 }
 
 .logo{
-  height:2em;        /* 제목 글자 높이와 동일 */
-  width:auto;
-  display:block;
-  object-fit:contain;
+  height: 2em;   /* 제목 글자의 2배 */
+  width: auto;
 }
 
 .credit{
@@ -175,6 +171,7 @@ button{
   width:100%;
   height:18px;
   background:#eee;
+  border: 1.5px solid #000;
   border-radius:999px;
   overflow:hidden;
 }
@@ -246,5 +243,6 @@ button{
     height: calc(900px * (100vw / 1200));
   }
 }
+
 
 
