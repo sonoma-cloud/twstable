@@ -9,9 +9,9 @@ const members = [
 
 const STEP = 10;            // 10% 단위
 const FIXED_WIDTH = 50;     // 결과 바 길이 항상 50%
-const MAX_CHARS = 100;      // 한글 기준 100자 제한(띄어쓰기 포함)
-const FONT_BASE = 12;       // 기본 12
-const FONT_MIN = 10;        // 최소 10
+const MAX_CHARS = 150;      // 한글 기준 100자 제한(띄어쓰기 포함)
+const FONT_BASE = 16;       // 기본 12
+const FONT_MIN = 14;        // 최소 10
 
 const inputs = document.getElementById("inputs");
 const resultList = document.getElementById("resultList");
@@ -231,5 +231,6 @@ window.addEventListener("resize", () => {
   const result = document.getElementById("result");
   if (result && getComputedStyle(result).display !== "none") updatePreviewScale();
 });
+
 
 
