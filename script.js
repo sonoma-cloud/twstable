@@ -73,11 +73,21 @@ function generate() {
 
     const bar = document.getElementById(`bar${i}`);
 
-    // 차이값 (0~100)
-    const diff = Math.abs(g - s);
+const FIXED_WIDTH = 50; // 색칠된 바는 항상 50%
+const STEP = 10;       // 10% 단위 이동
 
-    // 최소 표시 길이 (완전 50/50이어도 보이게)
-    const width = diff === 0 ? 6 : diff;
+// 50을 기준으로 얼마나 차이 나는지
+const delta = Math.round((g - 50) / STEP) * STEP;
+
+// 중앙 기준 left 값
+let left = 25 - delta / 2;
+
+// 안전장치 (범위 벗어나지 않게)
+left = Math.max(0, Math.min(50, left));
+
+bar.style.width = FIXED_WIDTH + "%";
+bar.style.left = left + "%";
+
 
     // 중앙 기준 이동
     // g > s → 왼쪽, s > g → 오른쪽
@@ -118,6 +128,7 @@ function saveImage() {
     console.error(err);
   });
 }
+
 
 
 
