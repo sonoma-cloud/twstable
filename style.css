@@ -88,21 +88,21 @@ button {
   margin-bottom: 20px;
 }
 
-.title-wrap{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.logo{
-  height: 1em;     /* 요구: 2em */
-  width: auto;
-  object-fit: contain;
+.title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .header h1 {
-  margin: 0;
   font-size: 24px;
+  margin: 0;
+}
+
+.logo {
+  height: 1em;     /* h1 글자 높이 기준 */
+  width: auto;
+  display: block;
 }
 
 .credit {
@@ -190,6 +190,7 @@ button {
   width: auto;
   object-fit: contain;
 }
+
 
 
 
