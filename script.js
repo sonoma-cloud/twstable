@@ -10,6 +10,40 @@ const members = [
 const inputs = document.getElementById("inputs");
 const resultList = document.getElementById("resultList");
 
+/** ===== 텍스트 정책 =====
+ * - 한글 기준(띄어쓰기 포함) 100자 제한
+ * - 결과 박스에 넣을 때 폰트 12 -> 최소 10까지 자동 축소
+ */
+const MAX_CHARS = 100;
+const FONT_MAX = 12;
+const FONT_MIN = 10;
+
+function clampTextToMaxChars(str, maxChars = MAX_CHARS) {
+  // 한글/영문 모두 “글자 수” 기준으로 제한 (띄어쓰기 포함)
+  if (!str) return "";
+  return str.length > maxChars ? str.slice(0, maxChars) : str;
+}
+
+function fitTextFont(el, basePx = FONT_MAX, minPx = FONT_MIN) {
+  // el: 결과 텍스트 박스(.result-text)
+  // 내용이 박스 높이를 넘치면 폰트를 줄여서 맞춤 (최소 minPx)
+  if (!el) return;
+
+  // 일단 기본 폰트로 리셋
+  el.style.fontSize = basePx + "px";
+
+  // 스크롤이 생기면 넘친다는 뜻
+  let size = basePx;
+  // 레이아웃 계산을 위해 한번 강제 리플로우
+  void el.offsetHeight;
+
+  while (size > minPx && el.scrollHeight > el.clientHeight + 1) {
+    size -= 1;
+    el.style.fontSize = size + "px";
+    void el.offsetHeight;
+  }
+}
+
 /* 입력 UI 생성 */
 members.forEach((m, i) => {
   inputs.innerHTML += `
@@ -19,15 +53,13 @@ members.forEach((m, i) => {
         <strong>${m.name}</strong>
       </div>
 
-<div class="range-row">
-  <span class="side">공 <b id="gPct${i}">50%</b></span>
-  
-  <input type="range" min="0" max="100" value="50" id="range${i}" aria-label="${m.name} 공수 비율">
+      <div class="range-row">
+        <span class="side">공 <b id="gPct${i}">50%</b></span>
+        <input type="range" min="0" max="100" value="50" step="10" id="range${i}" aria-label="${m.name} 공수 비율">
+        <span class="side">수 <b id="sPct${i}">50%</b></span>
+      </div>
 
-  <span class="side">수 <b id="sPct${i}">50%</b></span>
-</div>
-
-      <textarea id="text${i}" placeholder="텍스트 작성"></textarea>
+      <textarea id="text${i}" placeholder="텍스트 작성" maxlength="${MAX_CHARS}"></textarea>
     </div>
   `;
 
@@ -48,7 +80,21 @@ members.forEach((m, i) => {
   `;
 });
 
-/* 슬라이더 실시간 */
+/* 텍스트 입력: 100자 초과 방지(붙여넣기 포함) */
+members.forEach((_, i) => {
+  const ta = document.getElementById(`text${i}`);
+  if (!ta) return;
+
+  const enforce = () => {
+    const fixed = clampTextToMaxChars(ta.value, MAX_CHARS);
+    if (ta.value !== fixed) ta.value = fixed;
+  };
+
+  ta.addEventListener("input", enforce);
+  ta.addEventListener("paste", () => setTimeout(enforce, 0));
+});
+
+/* 슬라이더 실시간 (10% 단위 유지) */
 members.forEach((_, i) => {
   const r = document.getElementById(`range${i}`);
   const gPct = document.getElementById(`gPct${i}`);
@@ -56,17 +102,16 @@ members.forEach((_, i) => {
 
   const STEP = 10;
 
-const sync = () => {
-  const snapped = Math.round(Number(r.value) / STEP) * STEP;
-  const g = 100 - snapped;   // ✅ 방향 반전
-  const s = 100 - g;
-  gPct.textContent = `${g}%`;
-  sPct.textContent = `${s}%`;
-};
+  const sync = () => {
+    const snapped = Math.round(Number(r.value) / STEP) * STEP;
+    const g = snapped;          // ✅ 왼쪽(공) 값 그대로
+    const s = 100 - g;
+    gPct.textContent = `${g}%`;
+    sPct.textContent = `${s}%`;
+  };
 
   r.addEventListener("input", sync);
   r.addEventListener("change", () => {
-    // 손 떼면 슬라이더 값 자체도 스냅
     r.value = Math.round(Number(r.value) / STEP) * STEP;
     sync();
   });
@@ -76,20 +121,20 @@ const sync = () => {
 
 /* 결과 생성 */
 function generate() {
-  const FIXED_WIDTH = 50; // 항상 50% 길이
+  const FIXED_WIDTH = 50; // 색칠된 바는 항상 50%
   const STEP = 10;        // 10% 단위 스냅
 
   members.forEach((_, i) => {
     const r = document.getElementById(`range${i}`);
 
-    // 1️⃣ 슬라이더 값 → 10% 단위로 스냅
+    // 1) 슬라이더 값 스냅
     let g = Math.round(Number(r.value) / STEP) * STEP;
     g = Math.max(0, Math.min(100, g));
     r.value = g;
 
     const s = 100 - g;
 
-    // 2️⃣ 입력 화면 퍼센트 동기화
+    // 2) 입력쪽 퍼센트 반영
     const gPct = document.getElementById(`gPct${i}`);
     const sPct = document.getElementById(`sPct${i}`);
     if (gPct && sPct) {
@@ -97,29 +142,26 @@ function generate() {
       sPct.textContent = `${s}%`;
     }
 
-    // 3️⃣ 결과 바 위치 계산
+    // 3) 결과 바: 길이 고정 + 위치만 이동
+    // 공 100 -> left 0 / 공 50 -> left 25 / 공 0 -> left 50
     const bar = document.getElementById(`bar${i}`);
-
-    /*
-      기준:
-      - bar width = 50%
-      - left 범위 = 0 ~ 50
-
-      공 100 → left = 0
-      공 50  → left = 25
-      공 0   → left = 50
-    */
     const left = (100 - g) / 2;
 
     bar.style.width = FIXED_WIDTH + "%";
     bar.style.left = left + "%";
 
-    // 4️⃣ 텍스트 반영
-    document.getElementById(`resultText${i}`).innerText =
-      document.getElementById(`text${i}`).value || " ";
+    // 4) 텍스트: 100자 제한 + 자동 폰트 맞춤
+    const ta = document.getElementById(`text${i}`);
+    const out = document.getElementById(`resultText${i}`);
+
+    const text = clampTextToMaxChars((ta?.value || "").trim(), MAX_CHARS);
+    out.textContent = text || " ";
+
+    // 폰트 자동 축소(12 -> 10)
+    fitTextFont(out, FONT_MAX, FONT_MIN);
   });
 
-  // 5️⃣ 화면 전환
+  // 5) 화면 전환
   document.getElementById("controls").style.display = "none";
   document.getElementById("result").style.display = "block";
   document.getElementById("result").scrollIntoView({ behavior: "smooth" });
@@ -142,7 +184,3 @@ function saveImage() {
     console.error(err);
   });
 }
-
-
-
-
