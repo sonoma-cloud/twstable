@@ -156,7 +156,7 @@ button{
 .grid{
   display:grid;
   grid-template-columns: 1fr 1fr;
-  gap:32px 34px;  /* ✅ 간격 늘림 */
+  gap:36px 40px;  /* ✅ 간격 늘림 */
 }
 
 /* 카드 레이아웃: 바/텍스트 살짝 작게 */
@@ -207,12 +207,13 @@ button{
   border:1px solid #000;
   border-radius:14px;
   padding:20px;
-  min-height:150px;     /* ✅ 박스는 ‘조금 줄이고’ 싶다 했지만, 글씨 키우면 높이도 필요 */
+  height:150px;     /* ✅ 박스는 ‘조금 줄이고’ 싶다 했지만, 글씨 키우면 높이도 필요 */
   font-size:24px;       /* ✅ 기존 13 → 16 (2배 체감) */
   line-height:1.45;
   text-align: left;
   word-break:break-word;
 }
+
 
 
 
