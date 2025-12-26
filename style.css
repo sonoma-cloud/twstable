@@ -95,7 +95,7 @@ button {
 }
 
 .logo{
-  height: 2em;     /* 요구: 2em */
+  height: 1em;     /* 요구: 2em */
   width: auto;
   object-fit: contain;
 }
@@ -190,6 +190,7 @@ button {
   width: auto;
   object-fit: contain;
 }
+
 
 
 
