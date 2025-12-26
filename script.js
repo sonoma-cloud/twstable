@@ -10,25 +10,29 @@ const members = [
 const inputs = document.getElementById("inputs");
 const resultList = document.getElementById("resultList");
 
+/* 입력 UI 생성 */
 members.forEach((m, i) => {
   inputs.innerHTML += `
     <div class="member-control">
       <div class="member-header">
-        <img src="${m.img}" alt="${m.name}">
-        <span>${m.name}</span>
+        <img src="${m.img}">
+        <strong>${m.name}</strong>
       </div>
+
       <div class="range-row">
         공
         <input type="range" min="0" max="100" value="50" id="range${i}">
-        <span id="value${i}">50%</span>
+        수
+        <span id="value${i}">50 / 50</span>
       </div>
-      <textarea id="text${i}" placeholder="텍스트 입력"></textarea>
+
+      <textarea id="text${i}" placeholder="텍스트 작성 부분"></textarea>
     </div>
   `;
 
   resultList.innerHTML += `
     <div class="card">
-      <img src="${m.img}" alt="${m.name}">
+      <img src="${m.img}">
       <div class="content">
         <div class="bar-wrap">
           공
@@ -43,15 +47,16 @@ members.forEach((m, i) => {
   `;
 });
 
-/* 슬라이더 실시간 % */
+/* 슬라이더 실시간 */
 members.forEach((_, i) => {
-  const range = document.getElementById(`range${i}`);
-  const value = document.getElementById(`value${i}`);
-  range.addEventListener("input", () => {
-    value.innerText = range.value + "%";
+  const r = document.getElementById(`range${i}`);
+  const v = document.getElementById(`value${i}`);
+  r.addEventListener("input", () => {
+    v.innerText = `${r.value} / ${100 - r.value}`;
   });
 });
 
+/* 결과 생성 */
 function generate() {
   members.forEach((_, i) => {
     const g = document.getElementById(`range${i}`).value;
@@ -64,39 +69,12 @@ function generate() {
   document.getElementById("result").style.display = "block";
 }
 
+/* 이미지 저장 */
 function saveImage() {
-  html2canvas(document.getElementById("result"), { scale: 2 }).then(canvas => {
-    const link = document.createElement("a");
-    link.download = "twsrps.png";
-    link.href = canvas.toDataURL();
-    link.click();
-  });
-}
-function saveImage() {
-  const target = document.getElementById("result");
-
-  html2canvas(target, {
-    scale: 1,
-    width: 360,        // 기준 레이아웃 폭
-    windowWidth: 360,  // 모바일 기준
-  }).then(canvas => {
-    const resized = document.createElement("canvas");
-    const ctx = resized.getContext("2d");
-
-    const ratio = 1080 / canvas.width;
-    resized.width = 1080;
-    resized.height = canvas.height * ratio;
-
-    ctx.drawImage(
-      canvas,
-      0, 0,
-      resized.width,
-      resized.height
-    );
-
-    const link = document.createElement("a");
-    link.download = "gong_su_mobile.png";
-    link.href = resized.toDataURL("image/png");
-    link.click();
+  html2canvas(document.getElementById("capture"), { scale: 2 }).then(canvas => {
+    const a = document.createElement("a");
+    a.href = canvas.toDataURL("image/png");
+    a.download = "gong_su_4x3.png";
+    a.click();
   });
 }
