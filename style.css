@@ -97,22 +97,26 @@ button{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
 }
 
 .title-wrap{
-  font-size: 24px; /* 기준 폰트 */
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
 .header h1{
   margin:0;
-  font-size:40px; /* 참고 이미지 느낌 */
-  letter-spacing:-0.5px;
+  font-size:24px;
+  line-height:1;
 }
 
 .logo{
-  height: 2em;   /* 제목 글자의 2배 */
+  height: 1.8em;        /* 글자 높이 기준 */
   width: auto;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .credit{
@@ -243,6 +247,7 @@ button{
     height: calc(900px * (100vw / 1200));
   }
 }
+
 
 
 
