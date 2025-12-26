@@ -73,10 +73,11 @@ button {
 /* 4:3 고정 캔버스 */
 /* 4:3 고정 캔버스 (캡처 안정화) */
 .canvas {
-  width: 1200px;      /* 4:3 기준 가로 */
-  height: 900px;      /* 4:3 기준 세로 */
+  width: 100%;
+  max-width: 1200px;
+  aspect-ratio: 4 / 3;
   margin: 0 auto;
-  padding: 30px;      /* 살짝 여백 늘리면 보기 좋아짐 */
+  padding: 30px;
   background: #fff;
 }
 
@@ -178,6 +179,7 @@ button {
   justify-content: center;
   white-space: nowrap;
 }
+
 
 
 
