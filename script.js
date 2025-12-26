@@ -56,13 +56,13 @@ members.forEach((_, i) => {
 
   const STEP = 10;
 
-  const sync = () => {
-    const snapped = Math.round(Number(r.value) / STEP) * STEP;
-    const g = snapped;
-    const s = 100 - g;
-    gPct.textContent = `${g}%`;
-    sPct.textContent = `${s}%`;
-  };
+const sync = () => {
+  const snapped = Math.round(Number(r.value) / STEP) * STEP;
+  const g = 100 - snapped;   // ✅ 방향 반전
+  const s = 100 - g;
+  gPct.textContent = `${g}%`;
+  sPct.textContent = `${s}%`;
+};
 
   r.addEventListener("input", sync);
   r.addEventListener("change", () => {
@@ -77,19 +77,19 @@ members.forEach((_, i) => {
 /* 결과 생성 */
 function generate() {
   const FIXED_WIDTH = 50; // 항상 50% 길이
-  const STEP = 10;        // 10% 단위
+  const STEP = 10;        // 10% 단위 스냅
 
   members.forEach((_, i) => {
     const r = document.getElementById(`range${i}`);
-    let g = Number(r.value);
 
-    // 10% 단위로 스냅(반올림)
-    g = Math.round(g / STEP) * STEP;
-    r.value = g; // 슬라이더 손 떼면 값도 맞춰짐
+    // 1️⃣ 슬라이더 값 → 10% 단위로 스냅
+    let g = Math.round(Number(r.value) / STEP) * STEP;
+    g = Math.max(0, Math.min(100, g));
+    r.value = g;
 
     const s = 100 - g;
 
-    // 입력쪽 퍼센트도 즉시 동기화
+    // 2️⃣ 입력 화면 퍼센트 동기화
     const gPct = document.getElementById(`gPct${i}`);
     const sPct = document.getElementById(`sPct${i}`);
     if (gPct && sPct) {
@@ -97,24 +97,29 @@ function generate() {
       sPct.textContent = `${s}%`;
     }
 
-    // ✅ 결과 바: 길이 고정 + 위치만 이동
+    // 3️⃣ 결과 바 위치 계산
     const bar = document.getElementById(`bar${i}`);
 
-    // g=50 -> left=25 (중앙)
-    // g가 커질수록 left 감소(왼쪽 이동), g가 작아질수록 left 증가(오른쪽 이동)
-    const shift = (50 - g) / 2;     // -25 ~ +25
-    let left = 25 + shift;          // 0 ~ 50
+    /*
+      기준:
+      - bar width = 50%
+      - left 범위 = 0 ~ 50
 
-    // 안전 범위
-    left = Math.max(0, Math.min(50, left));
+      공 100 → left = 0
+      공 50  → left = 25
+      공 0   → left = 50
+    */
+    const left = (100 - g) / 2;
 
     bar.style.width = FIXED_WIDTH + "%";
     bar.style.left = left + "%";
 
+    // 4️⃣ 텍스트 반영
     document.getElementById(`resultText${i}`).innerText =
       document.getElementById(`text${i}`).value || " ";
   });
 
+  // 5️⃣ 화면 전환
   document.getElementById("controls").style.display = "none";
   document.getElementById("result").style.display = "block";
   document.getElementById("result").scrollIntoView({ behavior: "smooth" });
@@ -137,6 +142,7 @@ function saveImage() {
     console.error(err);
   });
 }
+
 
 
 
