@@ -131,6 +131,7 @@ function generate() {
   // 모바일 자동축소 갱신
   updatePreviewScale();
   window.scrollTo({ top: 0, behavior: "smooth" });
+  
 }
 
 // ====== 저장: 1200x900 “그대로” 저장 (scale=1) ======
@@ -239,6 +240,21 @@ window.addEventListener("resize", () => {
 });
 
 
+function updatePreviewScale(){
+  const preview = document.getElementById("preview");
+  const capture = document.getElementById("capture");
+  if(!preview || !capture) return;
+
+  // preview 실제 가로폭 기준으로 스케일 계산 (1200px 캔버스 기준)
+  const scale = Math.min(1, preview.clientWidth / 1200);
+
+  document.documentElement.style.setProperty("--preview-scale", scale);
+
+  // ✅ overflow:hidden에서 잘리지 않게, 프리뷰 높이도 스케일만큼 확보
+  preview.style.height = (900 * scale) + "px";
+}
+
+window.addEventListener("resize", updatePreviewScale);
 
 
 
