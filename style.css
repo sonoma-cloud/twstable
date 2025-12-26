@@ -168,7 +168,7 @@ button{
 }
 
 .card img{
-  width:120px; height:120px;  /* 사진은 좀 키우는 게 저장 시 보기 좋음 */
+  width:150px; height:150px;  /* 사진은 좀 키우는 게 저장 시 보기 좋음 */
   border-radius:50%;
   object-fit:cover;
 }
@@ -214,6 +214,7 @@ button{
   text-align: left;
   word-break:break-word;
 }
+
 
 
 
