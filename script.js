@@ -18,23 +18,23 @@ const resultList = document.getElementById("resultList");
 
 // ====== 입력/결과 UI 생성 ======
 members.forEach((m, i) => {
-  inputs.innerHTML += `
-    <div class="member-control">
-      <div class="member-header">
-        <img src="${m.img}" crossorigin="anonymous" referrerpolicy="no-referrer">
-        <strong>${m.name}</strong>
-      </div>
-
-      <div class="range-row">
-        <span class="side">공 <b id="gPct${i}">50%</b></span>
-        <input type="range" min="0" max="100" value="50" step="${STEP}" id="range${i}" aria-label="${m.name} 공수 비율">
-        <span class="side">수 <b id="sPct${i}">50%</b></span>
-      </div>
-
-      <textarea id="text${i}" placeholder="텍스트 작성" maxlength="${MAX_CHARS}"></textarea>
+inputs.innerHTML += `
+  <div class="member-control">
+    <div class="member-header">
+      <img src="${m.img}" crossorigin="anonymous">
+      <strong>${m.name}</strong>
     </div>
-  `;
 
+    <div class="range-row">
+      <span class="side">공 <b id="gPct${i}">50%</b></span>
+      <input type="range" min="0" max="100" value="50" step="10" id="range${i}">
+      <span class="side">수 <b id="sPct${i}">50%</b></span>
+    </div>
+
+    <textarea id="text${i}" placeholder="텍스트 작성"></textarea>
+    <div class="char-count" id="count${i}">0/${MAX_CHARS}</div>
+  </div>
+`;
   resultList.innerHTML += `
     <div class="card">
       <img src="${m.img}" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -69,6 +69,23 @@ members.forEach((_, i) => {
 
   r.addEventListener("input", sync);
   sync();
+});
+
+members.forEach((_, i) => {
+  const textarea = document.getElementById(`text${i}`);
+  const counter = document.getElementById(`counter${i}`);
+  const MAX = 80;
+
+  const updateCount = () => {
+    // 혹시 모를 초과 입력 방지
+    if (textarea.value.length > MAX) {
+      textarea.value = textarea.value.slice(0, MAX);
+    }
+    counter.textContent = `${textarea.value.length} / ${MAX}`;
+  };
+
+  textarea.addEventListener("input", updateCount);
+  updateCount(); // 초기값
 });
 
 // ====== 텍스트 폰트 자동 축소(12 -> 최소 10), 100자 제한 ======
@@ -237,6 +254,7 @@ window.addEventListener("resize", () => {
   const result = document.getElementById("result");
   if (result && getComputedStyle(result).display !== "none") updatePreviewScale();
 });
+
 
 
 
