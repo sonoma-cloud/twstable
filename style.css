@@ -71,21 +71,20 @@ button {
 }
 
 /* 4:3 고정 캔버스 */
+/* 4:3 고정 캔버스 (캡처 안정화) */
 .canvas {
-  width: 100%;
-  max-width: 1600px;
-  aspect-ratio: 4 / 3;
+  width: 1200px;      /* 4:3 기준 가로 */
+  height: 900px;      /* 4:3 기준 세로 */
   margin: 0 auto;
-  padding: 20px;
+  padding: 30px;      /* 살짝 여백 늘리면 보기 좋아짐 */
   background: #fff;
 }
 
 /* 헤더 */
 .header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between; /* 왼쪽 제목, 오른쪽 출처 */
   align-items: center;
-  position: relative;
   margin-bottom: 20px;
 }
 
@@ -95,12 +94,10 @@ button {
 }
 
 .credit {
-  position: absolute;
-  right: 0;
   background: #000;
   color: #fff;
-  font-size: 12px;
-  padding: 5px 10px;
+  font-size: 6px;
+  padding: 3px 6px;
   border-radius: 20px;
 }
 
@@ -130,7 +127,7 @@ button {
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .bar {
@@ -158,6 +155,7 @@ button {
   padding: 8px;
   font-size: 13px;
   min-height: 60px;
+  line-height: 1.35;
 }
 
 .range-row .side{
@@ -167,6 +165,18 @@ button {
   align-items: center;
   justify-content: center;
   white-space: nowrap;
+}
+
+.title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo {
+  height: 2em;
+  width: auto;
+  object-fit: contain;
 }
 
 
