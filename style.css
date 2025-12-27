@@ -3,7 +3,7 @@
 body {
   margin: 0;
   padding: 16px;
-  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
   background: #fff;
 }
 
@@ -51,7 +51,7 @@ button{
   border-radius:999px;
   font-size:13px;
   outline:none;
-  font-family:'Noto Sans KR', sans-serif;
+  font-family:'Pretendard', sans-serif;
 }
 
 .member-control{
@@ -91,7 +91,7 @@ button{
   align-items:center;
   justify-content:center;
   white-space:nowrap;
-  font-family:'Noto Sans KR', sans-serif;
+  font-family:'Pretendard', sans-serif;
   line-height:1.1;
 }
 
@@ -110,7 +110,7 @@ button{
   border:1px solid #000;
   resize:none;
   font-size:13px;
-  font-family:'Noto Sans KR', sans-serif;
+  font-family:'Pretendard', sans-serif;
 }
 
 /* ================= 결과 화면 ================= */
@@ -200,7 +200,7 @@ button{
   color:#fff;
   padding:10px 14px;
   border-radius:999px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI",
                Roboto, Helvetica, Arial, sans-serif;
   font-size:16px;
   font-weight:700;
@@ -225,7 +225,7 @@ button{
 }
 
 .otp-text{
-  font-family:'Noto Sans KR', sans-serif;
+  font-family:'Pretendard', sans-serif;
   font-size:16px;      /* ✅ 텍스트도 16 */
   font-weight:700;     /* ✅ 볼드 */
   color:#000;          /* ✅ 블랙 */
@@ -268,7 +268,7 @@ button{
   align-items:center;
   gap:12px;
   margin-bottom:14px;
-  font-family:'Noto Sans KR', sans-serif;
+  font-family:'Pretendard', sans-serif;
 }
 
 /* ✅ 결과 공/수(라벨+숫자) 가운데 정렬 */
@@ -279,7 +279,7 @@ button{
 }
 
 .sidecol .label{
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI",
                Roboto, Helvetica, Arial, sans-serif;
   font-size:14px;
   font-weight:700;
@@ -338,6 +338,7 @@ button{
   word-break:break-word;
   font-variant-numeric: tabular-nums;
 }
+
 
 
 
