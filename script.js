@@ -9,7 +9,7 @@ const members = [
 
 const STEP = 10;            // 10% 단위
 const FIXED_WIDTH = 50;     // 결과 바 길이 항상 50%
-const MAX_CHARS = 100;      // 입력 최대 글자수(한글 100자 기준)
+const MAX_CHARS = 85;      // 입력 최대 글자수(한글 100자 기준)
 const TEXT_FONT_PX = 20;    // 결과 텍스트 폰트 고정(잘리게)
 const CAPTURE_W = 1200;
 const CAPTURE_H = 900;
@@ -32,7 +32,7 @@ members.forEach((m, i) => {
         <span class="side">수 <b id="sPct${i}">50%</b></span>
       </div>
 
-      <textarea id="text${i}" placeholder="텍스트 작성" maxlength="${MAX_CHARS}"></textarea>
+      <textarea id="text${i}" placeholder="텍스트 입력 (최대85자)" maxlength="${MAX_CHARS}"></textarea>
     </div>
   `);
 
@@ -154,50 +154,70 @@ function generate() {
 }
 
 // ====== 저장: 1200x900 고정 ======
-function saveImage() {
+async function saveImage() {
   const capture = document.getElementById("capture");
 
-  // 프리뷰 transform 제거하고 캡처 (모바일에서 왼쪽 위 작게 찍히는 문제 방지)
+  // OTP 텍스트 보장 반영
+  const otpIn = document.getElementById("otpIn");
+  const otpText = (otpIn?.value || "").trim().slice(0, 8);
+  const otpOut = document.getElementById("otpOut");
+  if (otpOut) otpOut.textContent = otpText;
+
+  // 폰트 로딩 대기(폰트 깨짐 방지)
+  if (document.fonts && document.fonts.ready) {
+    await document.fonts.ready;
+  }
+
+  // 프리뷰 transform 제거
   const prevTransform = capture.style.transform;
   const prevOrigin = capture.style.transformOrigin;
   capture.style.transform = "none";
   capture.style.transformOrigin = "top left";
 
-  html2canvas(capture, {
-    scale: 1,
-    useCORS: true,
-    allowTaint: true,
-    backgroundColor: "#fff",
-    width: CAPTURE_W,
-    height: CAPTURE_H,
-    windowWidth: CAPTURE_W,
-    height: CAPTURE_H,
-    windowHeight: CAPTURE_H
-  }).then((canvas) => {
-    const out = document.createElement("canvas");
-    out.width = CAPTURE_W;
-    out.height = CAPTURE_H;
-    const ctx = out.getContext("2d");
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, out.width, out.height);
+  // 레이아웃 안정화: 2프레임 대기
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-    const scale = Math.min(out.width / canvas.width, out.height / canvas.height);
-    const dw = canvas.width * scale;
-    const dh = canvas.height * scale;
-    const dx = (out.width - dw) / 2;
-    const dy = (out.height - dh) / 2;
+  // === 3MP 제한에 맞춰 scale 계산 ===
+  // 기본: 1200 x 900 = 1.08MP
+  // 목표: <= 3MP → scale ≈ 1.6
+  const MAX_MP = 3_000_000;
+  const basePixels = CAPTURE_W * CAPTURE_H; // 1200*900
+  const maxScale = Math.sqrt(MAX_MP / basePixels);
+  const scale = Math.min(1.6, maxScale); // 안전값
 
-    ctx.drawImage(canvas, dx, dy, dw, dh);
+  try {
+    const canvas = await html2canvas(capture, {
+      scale,                   // ✅ 확대 캡처만 하고
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: "#fff",
+      width: CAPTURE_W,
+      height: CAPTURE_H,
+      windowWidth: CAPTURE_W,
+      windowHeight: CAPTURE_H,
+      imageTimeout: 15000,
+      onclone: (clonedDoc) => {
+        // 클론 DOM에도 OTP 반영
+        const clonedOtpOut = clonedDoc.getElementById("otpOut");
+        if (clonedOtpOut) clonedOtpOut.textContent = otpText;
+      }
+    });
 
+    // ✅ 확대된 캔버스를 그대로 PNG로 저장 (축소/재그리기 없음)
     const a = document.createElement("a");
-    a.href = out.toDataURL("image/png");
+    a.href = canvas.toDataURL("image/png");
     a.download = "twsrps.png";
     a.click();
-  }).catch((err) => {
-    alert("이미지 저장 실패: CORS 또는 렌더링 문제일 수 있어요.");
+
+  } catch (err) {
+    alert("이미지 저장 실패: 렌더링 문제일 수 있어요.");
     console.error(err);
-  }).finally(() => {
+  } finally {
     capture.style.transform = prevTransform;
     capture.style.transformOrigin = prevOrigin;
-  });
+  }
 }
+
+
+
+
